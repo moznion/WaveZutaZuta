@@ -1,8 +1,19 @@
 # -*- coding: utf-8 -*-
 module WaveZutaZuta
   module Sampler
+    class IllegalWaveData < StandardError; end
+
     def initialize(pcm_meta, bpm)
       @pcm_meta = pcm_meta
+
+      # Validate
+      # XXX 現状はこれで非対応Wave をKick する
+      available_samplerate = 44100
+      available_bitswidth  = 16
+      unless @pcm_meta.samplerate == available_samplerate && @pcm_meta.bitswidth == available_bitswidth
+        raise IllegalWaveData, "Wave data must be 44100Hz/16bits"
+      end
+
       @bpm = bpm
       @sounds = {}
     end
